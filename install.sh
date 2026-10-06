@@ -17,16 +17,16 @@ CONF="server {
 "
 
 if command -v apt-get >/dev/null 2>&1; then
-    sudo apt-get update
-    sudo apt-get install -y nginx
-    sudo rm -f /etc/nginx/sites-enabled/default
-    echo "$CONF" | sudo tee /etc/nginx/sites-available/2048 >/dev/null
-    sudo ln -sf /etc/nginx/sites-available/2048 /etc/nginx/sites-enabled/2048
+    apt-get update
+    apt-get install -y nginx
+    rm -f /etc/nginx/sites-enabled/default
+    echo "$CONF" | tee /etc/nginx/sites-available/2048 >/dev/null
+    ln -sf /etc/nginx/sites-available/2048 /etc/nginx/sites-enabled/2048
 elif command -v dnf >/dev/null 2>&1 || command -v yum >/dev/null 2>&1; then
     PKG=$(command -v dnf || command -v yum)
-    sudo "$PKG" install -y nginx
-    sudo rm -f /etc/nginx/conf.d/default.conf
-    echo "$CONF" | sudo tee /etc/nginx/conf.d/2048.conf >/dev/null
+    "$PKG" install -y nginx
+    rm -f /etc/nginx/conf.d/default.conf
+    echo "$CONF" | tee /etc/nginx/conf.d/2048.conf >/dev/null
 elif command -v brew >/dev/null 2>&1; then
     brew install nginx
     WEB_ROOT="$(brew --prefix nginx)/html"
@@ -35,14 +35,14 @@ else
     exit 1
 fi
 
-sudo mkdir -p "$WEB_ROOT"
-sudo rm -rf "${WEB_ROOT:?}"/*
-sudo cp -r "$SRC_DIR"/. "$WEB_ROOT"/
+mkdir -p "$WEB_ROOT"
+rm -rf "${WEB_ROOT:?}"/*
+cp -r "$SRC_DIR"/. "$WEB_ROOT"/
 
 if command -v systemctl >/dev/null 2>&1; then
-    sudo nginx -t
-    sudo systemctl enable nginx
-    sudo systemctl restart nginx
+    nginx -t
+    systemctl enable nginx
+    systemctl restart nginx
 else
     brew services restart nginx
 fi
