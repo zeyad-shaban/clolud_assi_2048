@@ -1,13 +1,9 @@
-FROM node:18-slim
+FROM nginx:alpine
 
-WORKDIR /app
+COPY . /usr/share/nginx/html
 
-COPY package*.json ./
-RUN npm install
+COPY nginx.conf /etc/nginx/templates/default.conf.template
 
-COPY . .
+ENV PORT=8080
 
-ENV PORT=10000
-EXPOSE $PORT
-
-CMD ["sh", "-c", "npm start -- --port $PORT"]
+EXPOSE 8080
