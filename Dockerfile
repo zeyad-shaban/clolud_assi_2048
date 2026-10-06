@@ -1,17 +1,13 @@
 FROM node:18-slim
 
-RUN useradd -m -u 1000 user
-USER user
-ENV HOME=/home/user \
-    PATH=/home/user/.local/bin:$PATH
+WORKDIR /app
 
-WORKDIR $HOME/app
-
-COPY --chown=user package*.json ./
+COPY package*.json ./
 RUN npm install
 
-COPY --chown=user . .
+COPY . .
 
-EXPOSE 7860
+ENV PORT=10000
+EXPOSE $PORT
 
-CMD ["npm", "start", "--", "-p", "7860"]
+CMD ["sh", "-c", "npm start -- --port $PORT"]
