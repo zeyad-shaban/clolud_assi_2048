@@ -1,9 +1,14 @@
-FROM nginx:alpine
+FROM ubuntu:24.04
 
-COPY . /usr/share/nginx/html
+WORKDIR /app
+COPY . .
 
-COPY nginx.conf /etc/nginx/templates/default.conf.template
+RUN apt-get update && \
+    apt-get install -y nginx && \
+    rm -rf /var/lib/apt/lists/*
 
-ENV PORT=8080
+RUN ./install.sh
 
-EXPOSE 8080
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
